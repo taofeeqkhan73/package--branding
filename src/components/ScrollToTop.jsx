@@ -1,0 +1,30 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      let attempts = 0;
+      const maxAttempts = 6;
+      const scrollWithRetry = () => {
+        const id = hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else if (attempts < maxAttempts) {
+          attempts += 1;
+          setTimeout(scrollWithRetry, 80);
+        }
+      };
+      setTimeout(scrollWithRetry, 40);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [pathname, hash]);
+
+  return null;
+};
+
+export default ScrollToTop;
